@@ -6,7 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(nlohmann_json REQUIRED)
-find_package(httplib REQUIRED)
+
+include(FetchContent)
+
+FetchContent_Declare(httplib SYSTEM
+    GIT_REPOSITORY https://github.com/yhirose/cpp-httplib
+    GIT_TAG a609330e4c6374f741d3b369269f7848255e1954
+    GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(httplib)
+
 
 include_directories(inc)
 

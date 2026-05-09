@@ -23,7 +23,8 @@ void Scanner::scan() {
   try {
     auto options = std::filesystem::directory_options::skip_permission_denied;
 
-    for (auto &&entry : fs::recursive_directory_iterator(cfg.getRootPath(), options)) {
+    for (auto &&entry :
+         fs::recursive_directory_iterator(cfg.getRootPath(), options)) {
       if (entry.is_regular_file()) {
         std::string ext = entry.path().extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
@@ -40,12 +41,17 @@ void Scanner::scan() {
   }
 
   std::lock_guard<std::mutex> lock(dataMutex);
-  currentData = newData;
+  currentData = std::move(newData);
 }
 
 std::string Scanner::getSerializedData() {
   std::lock_guard<std::mutex> lock(dataMutex);
-  
-  return currentData.dump(4);
+
+  try {
+    return currentData.dump(4, ' ', false,
+                            nlohmann::json::error_handler_t::replace);
+  } catch (std::exception &e) {
+    return "{}";
+  }
 }
 } // namespace app

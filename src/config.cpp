@@ -16,14 +16,18 @@ void Config::loadExtensions(const File &configFile) {
       Json j;
       file >> j;
 
-      for (auto &&[category, exts] : j.items()) {
-        if (!exts.is_array()) {
-          std::cerr << "Category " << category << " isn't category. Skipping"
-                    << std::endl;
-          continue;
+      if (j.contains("extensions")) {
+        for (auto &&[category, exts] : j["extensions"].items()) {
+          if (!exts.is_array()) {
+            std::cerr << "Category " << category << " isn't an array. Skipping"
+                      << std::endl;
+            continue;
+          }
+          
+          extensions[category] = exts.get<FileList>();
         }
-
-        extensions[category] = exts.get<FileList>();
+      } else {
+        throw std::runtime_error("No 'extensions' key in config");
       }
     } catch (std::exception &err) {
 

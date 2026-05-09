@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   if (interval == 0) {
     std::cerr << "Error: interval must be bigger 0." << std::endl;
     return 1;
-}
+  }
 
   Config config(rootPath, interval);
   Scanner scanner(config);
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
              });
 
   std::cout << "Server started at http://localhost:1234/media_files"
-            << std::endl;
+            << std::endl; 
 
   server.listen("127.0.0.1", 1234);
 
