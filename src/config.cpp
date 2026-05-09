@@ -17,6 +17,12 @@ void Config::loadExtensions(const File &configFile) {
       file >> j;
 
       for (auto &&[category, exts] : j.items()) {
+        if (!exts.is_array()) {
+          std::cerr << "Category " << category << " isn't category. Skipping"
+                    << std::endl;
+          continue;
+        }
+
         extensions[category] = exts.get<FileList>();
       }
     } catch (std::exception &err) {

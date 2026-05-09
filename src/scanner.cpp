@@ -21,9 +21,12 @@ void Scanner::scan() {
   }
 
   try {
-    for (auto &&entry : fs::recursive_directory_iterator(cfg.getRootPath())) {
+    auto options = std::filesystem::directory_options::skip_permission_denied;
+
+    for (auto &&entry : fs::recursive_directory_iterator(cfg.getRootPath(), options)) {
       if (entry.is_regular_file()) {
         std::string ext = entry.path().extension().string();
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
         for (auto &&[category, exts] : cfg.getExtensions()) {
           if (std::find(exts.begin(), exts.end(), ext) != exts.end()) {

@@ -39,6 +39,11 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  if (interval == 0) {
+    std::cerr << "Error: interval must be bigger 0." << std::endl;
+    return 1;
+}
+
   Config config(rootPath, interval);
   Scanner scanner(config);
 
