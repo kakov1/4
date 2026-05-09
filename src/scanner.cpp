@@ -4,6 +4,7 @@
 #include <thread>
 
 namespace app {
+  
 Scanner::Scanner(const Config &config) : cfg(config) {}
 
 void Scanner::run() {
@@ -21,11 +22,13 @@ void Scanner::scan() {
   }
 
   try {
-    auto options = std::filesystem::directory_options::skip_permission_denied;
+    auto options = fs::directory_options::skip_permission_denied;
 
     for (auto &&entry :
          fs::recursive_directory_iterator(cfg.getRootPath(), options)) {
+
       if (entry.is_regular_file()) {
+
         std::string ext = entry.path().extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 

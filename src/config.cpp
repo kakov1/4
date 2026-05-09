@@ -3,6 +3,7 @@
 #include <iostream>
 
 namespace app {
+  
 Config::Config(Path path, Seconds interval, File configFile)
     : rootPath(std::move(path)), interval(interval) {
   loadExtensions(configFile);
@@ -23,7 +24,7 @@ void Config::loadExtensions(const File &configFile) {
                       << std::endl;
             continue;
           }
-          
+
           extensions[category] = exts.get<FileList>();
         }
       } else {

@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace app {
+  
 class Config final {
 private:
   Path rootPath;

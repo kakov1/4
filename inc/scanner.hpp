@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace app {
+  
 class Scanner final {
 private:
   const Config &cfg;
