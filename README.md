@@ -36,6 +36,13 @@ sudo apt update
 sudo apt install build-essential cmake libboost-program-options-dev nlohmann-json3-dev libcpp-httplib-dev
 ```
 
+### Сборка
+
+```bash
+cmake -S . -B build
+cd build && cmake --build .
+```
+
 ## Использование
 
 После сборки исполняемый файл app будет доступен в папке build.
