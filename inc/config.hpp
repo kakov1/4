@@ -1,26 +1,29 @@
 #pragma once
 
+#include "common.hpp"
 #include <filesystem>
 #include <map>
 #include <string>
 #include <vector>
 
+namespace app {
 class Config final {
 private:
-    using fs = std::filesystem;
-private:
-  fs::path rootPath;
-  uint64_t interval;
-  std::map<std::string, std::vector<std::string>> extensions;
+  Path rootPath;
+  Seconds interval;
+  MediaFiles extensions;
 
-  void loadExtensionsFromJson(const std::string &filename);
+private:
+  void loadExtensions(const File &filename);
+  void setDefaultExtensions();
 
 public:
-  Config(fs::path path, uint64_t interval);
+  Config(Path path, Seconds interval, File configFile = "config.json");
 
-  fs::path getRootPath() const { return rootPath; }
-  uint64_t getInterval() const { return interval; }
-  const std::map<std::string, std::vector<std::string>> &getExtensions() const {
-    return extensions;
-  }
+  Path getRootPath() const;
+
+  Seconds getInterval() const;
+
+  const MediaFiles &getExtensions() const;
 };
+} // namespace app

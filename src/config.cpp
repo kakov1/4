@@ -1,34 +1,42 @@
 #include "config.hpp"
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 
-Config::Config(std::filesystem::path path, uint64_t interval)
+namespace app {
+Config::Config(Path path, Seconds interval, File configFile)
     : rootPath(std::move(path)), interval(interval) {
-  loadExtensionsFromJson("config.json");
+  loadExtensions(configFile);
 }
 
-void Config::loadExtensionsFromJson(const std::string &filename) {
-  std::ifstream file(filename);
+void Config::loadExtensions(const File &configFile) {
+  std::ifstream file(configFile);
 
-  if (!file.is_open()) {
-    std::cerr << "Error: Could not open config file: " << filename << std::endl;
+  if (file.is_open()) {
+    try {
+      Json j;
+      file >> j;
 
-    extensions = {{"audio", {".mp3", ".wav"}},
-                  {"video", {".mp4", ".mkv"}},
-                  {"images", {".jpg", ".png"}}};
-    return;
-  }
+      for (auto &&[category, exts] : j.items()) {
+        extensions[category] = exts.get<FileList>();
+      }
+    } catch (std::exception &err) {
 
-  try {
-    nlohmann::json j;
-    file >> j;
-
-    if (j.contains("extensions")) {
-      extensions = j.at("extensions")
-                       .get<std::map<std::string, std::vector<std::string>>>();
+      setDefaultExtensions();
     }
-  } catch (const std::exception &e) {
-    std::cerr << "Error parsing config.json: " << e.what() << std::endl;
+  } else {
+    setDefaultExtensions();
   }
 }
+
+void Config::setDefaultExtensions() {
+  extensions["audio"] = {".mp3", ".wav", ".flac"};
+  extensions["video"] = {".mp4", ".mkv", ".avi"};
+  extensions["images"] = {".jpg", ".png", ".gif"};
+}
+
+Path Config::getRootPath() const { return rootPath; }
+
+Seconds Config::getInterval() const { return interval; }
+
+const MediaFiles &Config::getExtensions() const { return extensions; }
+} // namespace app

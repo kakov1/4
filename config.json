@@ -1,0 +1,7 @@
+{
+  "extensions": {
+    "audio": [".mp3", ".wav", ".ogg"],
+    "video": [".mp4", ".mkv", ".avi"],
+    "images": [".jpg", ".jpeg", ".png", ".gif"]
+  }
+}
